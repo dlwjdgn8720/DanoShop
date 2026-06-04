@@ -1,0 +1,11 @@
+/* QnAStyle 내 스타일 커스텀 */
+.rc-pagination-item-active {
+    background-color: #ff5e15;
+    /* 활성화 페이지 배경색 */
+    border-color: #ff5e15;
+}
+
+.rc-pagination-item a {
+    /* 글자 색상 */
+    color: #333;
+}

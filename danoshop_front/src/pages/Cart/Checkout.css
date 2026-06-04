@@ -1,0 +1,178 @@
+/* Checkout.css */
+
+/* 전체 컨테이너 세팅 */
+.cart-container {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 20px;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: #333;
+}
+
+/* 메인 타이틀 */
+.cart-header {
+  font-size: 28px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 40px;
+  color: #111;
+  letter-spacing: -0.5px;
+}
+
+/* 각 섹션 블록 (받는사람, 주문상품, 결제정보 등) */
+.section {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 30px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.section h2, 
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #1a202c;
+  border-bottom: 2px solid #1a202c;
+  padding-bottom: 12px;
+}
+
+/* 정보 그리드 레이아웃 (배송지, 주문상품 등) */
+.info-box {
+  margin-top: 10px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  row-gap: 16px;
+  column-gap: 10px;
+  align-items: center;
+  font-size: 15px;
+}
+
+/* 그리드 왼쪽 제목 (이름, 배송주소, 연락처 등) */
+.info-grid .label {
+  font-weight: 600;
+  color: #4a5568;
+}
+
+/* 그리드 오른쪽 내용 */
+.info-grid .value {
+  color: #2d3748;
+  line-height: 1.5;
+}
+
+/* 배송 요청사항 */
+.phone-input {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.phone-input input[type="text"] {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.phone-input input[type="text"]:focus {
+  border-color: #3182ce;
+}
+
+.phone-input .btn {
+  padding: 0;
+  border: 1px solid #cbd5e1;
+  width: 70px;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+/* 결제 정보 */
+.payment-table { 
+  width: 100%;
+}
+
+/* .payment-table tr {
+  justify-content: space-between;
+} */
+
+.payment-table td {
+  font-size: 1.6rem;
+  /* padding-top: 5px; */
+  padding-bottom: 15px;
+}
+
+.payment-table tr td:first-child {
+  text-align: left;
+  padding-left: 50px;
+}
+.payment-table tr td:last-child {
+  text-align: right;
+  padding-right: 50px;
+}
+.discount {
+  color: #2d3748d2;
+}
+
+.total td {
+  padding: 30px 0px;
+  border-top: 1px solid #1a202c;
+  padding-bottom: 10px;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* 결제 수단 */
+.payment-method {
+  font-size: 1.4rem;
+}
+
+.payment-method label {
+  display: flex;
+  gap: 5px;
+  margin: 10px 0px;
+}
+
+/* 약관 동의 */
+.terms label {
+  font-weight: 500;
+  font-size: 1.3rem;
+  margin: 5px 0px 0px 5px;
+}
+
+/* 결제 / 취소 버튼 */
+.pay-button-top {
+  margin-top: 20px;
+  justify-content: center;
+  padding: 0 50px;
+  display: flex;
+  gap: 20px;
+}
+
+.pay-button {
+  padding: 15px;
+  border: 1px solid #cbd5e1;
+  width: 40%;
+  font-size: 1.4rem;
+  font-weight: 500;
+}
+
+.pay-button-pay {
+  background-color: #1a1a1a;
+  color: white;
+}
+.pay-button-pay:focus {
+  background-color: #4b4b4b;
+}
+
+.pay-button-cancel:focus, .btn {
+  background-color: rgb(230, 230, 230);
+}

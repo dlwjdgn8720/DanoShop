@@ -1,0 +1,181 @@
+/* QnaForm 전체 컨테이너 */
+.qna-form-container {
+    max-width: 896px;
+    /* max-w-4xl */
+    margin: 40px auto;
+    /* my-10 mx-auto */
+    padding: 24px;
+    /* p-6 */
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid #f3f4f6;
+    /* box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); */
+}
+
+/* 상단 타이틀 영역 */
+.qna-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    /* border: 1px solid #e5e7eb; */
+}
+
+.qna-form-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+}
+
+/* 삭제 버튼 */
+.btn-delete {
+    padding: 6px 12px;
+    background-color: #fef2f2;
+    color: #dc2626;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-delete:hover {
+    background-color: #fee2e2;
+}
+
+/* 폼 내부 레이아웃 */
+.qna-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group-row {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+@media (min-width: 640px) {
+    .form-group-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+    }
+}
+
+.form-group-category {
+    width: 100%;
+}
+
+@media (min-width: 640px) {
+    .form-group-category {
+        width: 33.3333%;
+    }
+}
+
+/* 라벨 스타일 */
+.form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 4px;
+}
+
+/* 입력 필드 공통 (Select, Input, Textarea) */
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    border-color: #f97316;
+    /* 다노샵 오렌지 포인트 */
+}
+
+.form-input:disabled,
+.form-select:disabled,
+.form-textarea:disabled {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+}
+
+.form-textarea {
+    resize: none;
+}
+
+/* 비밀글 체크박스 영역 */
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    font-size: 14px;
+    color: #374151;
+}
+
+.form-checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #f97316;
+    /* 체크박스 오렌지색 적용 */
+    margin-right: 8px;
+}
+
+.form-checkbox:disabled {
+    opacity: 0.5;
+}
+
+/* 하단 버튼 영역 */
+.qna-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding-top: 16px;
+    border-top: 1px solid #f3f4f6;
+}
+
+/* 일반 버튼 공통 */
+.btn-cancel,
+.btn-submit {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-cancel {
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #4b5563;
+}
+
+.btn-cancel:hover {
+    background-color: #f9fafb;
+}
+
+.btn-submit {
+    border: none;
+    background-color: #f97316;
+    color: #ffffff;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-submit:hover {
+    background-color: #ea580c;
+}
