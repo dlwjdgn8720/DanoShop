@@ -25,12 +25,12 @@ function Header({ isAboutHeader }) {
       window.scrollY > 60 ? setHeaderFixed(true) : setHeaderFixed(false);
     });
 
-    const fetchData = async() => {
-      if(!isLogin) return;
+    const fetchData = async () => {
+      if (!isLogin) return;
 
-      const result = await axiosPost('/carts/count', {"userData": userData?.mid});
+      const result = await axiosPost('/carts/count', { "userData": userData?.mid });
       result.count ? initCartCount(parseInt(result.count)) : initCartCount(0);
-    }    
+    }
     fetchData();
 
     return () => {
@@ -92,7 +92,7 @@ function Header({ isAboutHeader }) {
 
   return (
     <>
-      <style.HeaderWrap isFixed={isHeaderFixed} isAboutHeader={isAboutHeader}>
+      <style.HeaderWrap $isFixed={isHeaderFixed} $isAboutHeader={isAboutHeader}>
         <style.Header>
           <style.HeaderTop>
             <ul className="top_list">
@@ -178,7 +178,7 @@ function Header({ isAboutHeader }) {
                   <Link to={'/sale'}>SALE</Link>
                 </li>
                 {location.pathname === '/' && cate.map(menu =>
-                  <li>
+                  <li key={menu.id}>
                     <Link to='#' onClick={e => handleScroll(e, menu.id)}>{menu.name}</Link>
                   </li>
                 )}

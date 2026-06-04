@@ -6,7 +6,7 @@ const GlobalStyles = createGlobalStyle`
     
     @font-face {
       font-family: "Noto Sans KR";
-      src: url("./assets/fonts/Noto_Sans_KR/NotoSansKR-VariableFont_wght.ttf");
+      src: url("/src/assets/fonts/Noto_Sans_KR/NotoSansKR-VariableFont_wght.ttf");
     }
     
     html {

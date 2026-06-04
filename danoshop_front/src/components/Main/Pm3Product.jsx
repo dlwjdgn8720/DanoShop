@@ -6,27 +6,27 @@ import { axiosGet, axiosPost } from "../../../utils/dataFetch.js";
 
 function Product() {
   const category = '3pm';
-      const [productList, setProductList] = useState([]);
-    
-      useEffect(() => {
-        const getProducts = async () => {
-          try {
-            const response = await axiosPost('/product/show', { category });
-            setProductList(response.result || []); 
-          } catch (error) {
-            console.error("데이터 가져오기 실패:", error);
-          }
-        };
-        getProducts();
-      }, []);
+  const [productList, setProductList] = useState([]);
+
+  useEffect(() => {
+    const getProducts = async () => {
+      try {
+        const response = await axiosPost('/product/show', { category });
+        setProductList(response.result || []);
+      } catch (error) {
+        console.error("데이터 가져오기 실패:", error);
+      }
+    };
+    getProducts();
+  }, []);
 
   return (
     <>
-      <style.MainProdList small>
+      <style.MainProdList $small={true}>
         <ul className="prod_list">
           {productList.map((item, index) => (
             <li className="product" key={index}>
-              <style.MainProd sale={!!item.sticker}>
+              <style.MainProd $sale={!!item.sticker}>
                 <div className="prod_thumb">
                   <Link to={`detail/${item.pid}`}>
                     <img src={item.image} alt="" />
