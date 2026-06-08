@@ -209,37 +209,39 @@ function Top({ product }) {
         userData: midValue                // 백엔드 컨트롤러에서 mid로 정제될 유저 아이디
       };
       */
-        // 선택한 옵션명
-        console.log("selectedOptions", selectedOptions);
-        console.log("productFull", productFull);
-        
-        const selectedOption = selectedOptions[0];
+      // 선택한 옵션명
+      console.log("selectedOptions", selectedOptions);
+      console.log("productFull", productFull);
 
-        // 옵션 정보 찾기
-        const optionInfo = productFull.find(
-          item => item.option === selectedOption
-        );
+      const selectedOption = selectedOptions[0];
 
-        
+      // 옵션 정보 찾기
+      const optionInfo = productFull.find(
+        item => item.option === selectedOption
+      );
 
-        // 서버 전송 객체
-        const cartItem = optionQuantities.map( option => {
-          const matchedItem = productFull?.find (item =>  item.option == option.option );
-          const selectedPoid = matchedItem ? matchedItem.poid : undefined;
 
-          return { "pid": product?.pid || product?.id,
-            "poid" : selectedPoid,
-            "qty" : option.quantity,
-            "userData" : midValue };
-        })
-        // {
-        //   pid: product?.pid || product?.id,
-        //   poid: optionInfo?.poid,
-        //   qty: totalQty,
-        //   userData: midValue
-        // };
 
-        console.log("장바구니 전송 데이터:", cartItem);
+      // 서버 전송 객체
+      const cartItem = optionQuantities.map(option => {
+        const matchedItem = productFull?.find(item => item.option == option.option);
+        const selectedPoid = matchedItem ? matchedItem.poid : undefined;
+
+        return {
+          "pid": product?.pid || product?.id,
+          "poid": selectedPoid,
+          "qty": option.quantity,
+          "userData": midValue
+        };
+      })
+      // {
+      //   pid: product?.pid || product?.id,
+      //   poid: optionInfo?.poid,
+      //   qty: totalQty,
+      //   userData: midValue
+      // };
+
+      console.log("장바구니 전송 데이터:", cartItem);
 
       // 4. 디버깅 및 전송 확인을 위한 콘솔 로그 (요청 전 상태 확인)
       console.log("장바구니 서버 전송 데이터 객체:", cartItem);
@@ -257,7 +259,9 @@ function Top({ product }) {
         alert("장바구니 담기에 실패했습니다. 다시 시도해 주세요.");
       }
 
-      if(actionType==='buy') movePage("/Cart");
+      if (actionType === 'buy') movePage("/Cart");
+
+      return true;
 
     } catch (error) {
       console.error("SendToCart 실행 중 통신 에러 발생:", error);
@@ -303,7 +307,7 @@ function Top({ product }) {
 
   const [CartAlert, setCartAlert] = useState(false);
   function activeCartAlert() {
-    selectedOptions[0]? setCartAlert(!CartAlert) : alert('상품 옵션을 선택해주세요');
+    selectedOptions[0] ? setCartAlert(!CartAlert) : alert('상품 옵션을 선택해주세요');
   }
 
   const movePage = useNavigate();
@@ -342,7 +346,7 @@ function Top({ product }) {
               </ul>
             </div>
           </style.ImgArea>
-          <style.InfoArea sale={!!product?.discount}>
+          <style.InfoArea $sale={!!product?.discount}>
             <div className="heading_area">
               <h1>{product?.name}</h1>
             </div>
@@ -547,9 +551,9 @@ function Top({ product }) {
                 </button>
                 <button
                   className="btn_normal sizeL action_cart"
-                  onClick={() => {
-                    SendToCart();
-                    activeCartAlert();
+                  onClick={async () => {
+                    const success = await SendToCart();
+                    if (success) activeCartAlert()
                   }}
                 >
                   장바구니

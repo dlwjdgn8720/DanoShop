@@ -71,6 +71,7 @@ function Header({ isAboutHeader }) {
   const handleLogout = async () => {
     await axiosPost("/member/logout"); // ← 서버에 쿠키 삭제 요청
     logout(); // ← Zustand 상태 초기화
+    localStorage.removeItem('loginType');
     alert("로그아웃 되었습니다");
     navigate("/");
   };

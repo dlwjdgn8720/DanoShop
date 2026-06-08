@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import useAuthStore from '../../../store/authStore.js';
 import { v4 as uuidv4 } from 'uuid';
 import QRModal from '../../components/Sub/QRModal.jsx';
-import { axiosPost } from '../../../utils/dataFetch.js';
+import { axiosPost, axiosGet } from '../../../utils/dataFetch.js';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { cartItemsCheck, updateCartItemsQty, getTotalPrice, cartItemsAddInfo } from "../../../utils/cart";
@@ -20,7 +20,7 @@ export default function Checkout() {
   const userData = useAuthStore((s) => s.userData);
 
   // 받는 사람 정보 불러오기 // 5/29 완성 // 카카오로그인이랑 일반 로그인이랑 id 값이 달라서 분기.
-  const userId = useAuthStore((s) => s.userData?.mid );
+  const userId = useAuthStore((s) => s.userData?.mid);
   const userZipcode = useAuthStore((s) =>
     s.userData?.zone_number || '12345'
   );
@@ -40,11 +40,11 @@ export default function Checkout() {
 
   // 배송지 정보 정보 상태 관리
   const [receiver, setReceiver] = useState({
-    name: '', 
+    name: '',
     phone: '',
-    zipcode: '12345', 
+    zipcode: '12345',
     address1: '',
-    address2: '', 
+    address2: '',
     memo: '문앞',
   });
 
@@ -57,17 +57,17 @@ export default function Checkout() {
   useEffect(() => {
     window.scroll({ top: 0, behavior: "auto" });
   }, []);
-  
+
   // 유저 정보 불러오기
   useEffect(() => {
-    const fetchUserInfo = async() => {
-      const info = await axios.get(`http://192.168.7.112:9000/member/userinfo/${userId}`);
-      
+    const fetchUserInfo = async () => {
+      const info = await axiosGet(`/member/userinfo/${userId}`);
+
 
       setReceiver({
-        name: info.data.name,
-        phone: info.data.phone,
-        address1: info.data.address,
+        name: info.name,
+        phone: info.phone,
+        address1: info.address,
         address2: '',
         memo: '문앞',
       });
@@ -77,34 +77,34 @@ export default function Checkout() {
 
   // cart DB 연동
   useEffect(() => {
-  const fetchProducts = async () => {
-    if (!userData?.mid) {
-      console.log("mid 없음");
-      return;
-    }
+    const fetchProducts = async () => {
+      if (!userData?.mid) {
+        console.log("mid 없음");
+        return;
+      }
 
-    try {
-      const list = await axiosPost('/carts/list', {
-        userData: userData.mid,
-      });
+      try {
+        const list = await axiosPost('/carts/list', {
+          userData: userData.mid,
+        });
 
-      setCartList(list);
-      setCartListStore(list);
-      console.log('리스트 ===> ', list);
+        setCartList(list);
+        setCartListStore(list);
+        console.log('리스트 ===> ', list);
 
-      // 총 금액 계산
-      const total = list.reduce((sum, item) => {
-        const price = item.price?.replace(/[^0-9]/g, '') || 0
-        return sum + price * item.qty;
-      }, 0);
-      setTotalPrice(total);
-    } catch (error) {
-      console.error("장바구니 조회 실패", error);
-    }
-  };
-  
-  fetchProducts();
-}, [userData]);
+        // 총 금액 계산
+        const total = list.reduce((sum, item) => {
+          const price = item.price?.replace(/[^0-9]/g, '') || 0
+          return sum + price * item.qty;
+        }, 0);
+        setTotalPrice(total);
+      } catch (error) {
+        console.error("장바구니 조회 실패", error);
+      }
+    };
+
+    fetchProducts();
+  }, [userData]);
 
   // [결제하기] 버튼 클릭 핸들러
   const handlePayment = async () => {
@@ -114,38 +114,38 @@ export default function Checkout() {
     }
 
     if (!terms || !privacy) {
-        alert('필수 약관에 모두 동의해야 결제가 가능합니다.');
-        return;
-      }
-      else if (payment === 'naver') {
-        alert('네이버페이는 준비중입니다. 카카오페이를 선택해주세요.');
-      } else
-      
+      alert('필수 약관에 모두 동의해야 결제가 가능합니다.');
+      return;
+    }
+    else if (payment === 'naver') {
+      alert('네이버페이는 준비중입니다. 카카오페이를 선택해주세요.');
+    } else
+
       try {
         // 고유 주문번호 생성 (UUID)
-        const orderId = uuidv4();    
-        
+        const orderId = uuidv4();
+
         // 상품명 표기 포맷팅 (ex: 단백질 쉐이크 외 2건 또는 단품명)
-        const itemName = cartList.length > 1 
-          ? `${cartList[0].name} 외 ${cartList.length - 1}건` 
-          : cartList[0].name; 
-        
+        const itemName = cartList.length > 1
+          ? `${cartList[0].name} 외 ${cartList.length - 1}건`
+          : cartList[0].name;
+
         // 총 수량 계산
         const totalQuantity = cartList.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
         // 카카오페이 준비 API 전송 데이터 정의
-        const orderData = { 
-          orderId, 
-          userId, 
-          itemName, 
-          quantity: totalQuantity, 
-          totalAmount: FinalPrice 
+        const orderData = {
+          orderId,
+          userId,
+          itemName,
+          quantity: totalQuantity,
+          totalAmount: FinalPrice
         };
 
         // API 호출
         const result = await axiosPost('/kakao/ready', orderData);
         const { tid, next_redirect_mobile_url } = result;
-        
+
         if (tid) {
           setQrUrl(next_redirect_mobile_url);
           setShowModal(true);
@@ -162,7 +162,7 @@ export default function Checkout() {
                 if (!isPaid) {
                   setIsPaid(true);
                   setShowModal(false);
-                  
+
                   window.location.href = '/success';
                 }
               }
@@ -171,20 +171,20 @@ export default function Checkout() {
             }
           }, 2000);
         }
-        
+
       } catch (error) {
         console.error('/kakao/ready :: error -->', error);
         alert('결제 준비 중 오류가 발생했습니다. 다시 시도해 주세요.');
       }
-    };
+  };
 
-    // 취소하기 버튼 이벤트
-    const clickCancel = () => {
-      alert('결제가 취소되었습니다.');
-      navigate('/cart');
-    }
+  // 취소하기 버튼 이벤트
+  const clickCancel = () => {
+    alert('결제가 취소되었습니다.');
+    navigate('/cart');
+  }
 
-  
+
   return (
     <div className="cart-container">
       <h2 className="cart-header">주문/결제</h2>
@@ -196,19 +196,19 @@ export default function Checkout() {
           <div className="info-grid">
             <div className="label">이름</div>
             <div className="value">{receiver.name}</div>
-            
+
             <div className="label">배송주소</div>
             <div className="value">{userZipcode} / {receiver.address1} {receiver.address2}</div>
-            
+
             <div className="label">연락처</div>
             <div className="value">{receiver.phone}</div>
-            
+
             <div className="label">배송 요청사항</div>
             <div className="value phone-input">
-              <input 
-                type='text' 
-                defaultValue={receiver.memo} 
-                onChange={(e) => setReceiver({ ...receiver, memo: e.target.value })} 
+              <input
+                type='text'
+                defaultValue={receiver.memo}
+                onChange={(e) => setReceiver({ ...receiver, memo: e.target.value })}
               />
               <button className="btn" onClick={() => alert('수정되었습니다.')}>변경</button>
             </div>
@@ -226,10 +226,10 @@ export default function Checkout() {
                 <Fragment key={item.id || index}>
                   <div className="label">상품 정보</div>
                   <div className="value" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <img 
-                      src={item.img || item.image} 
-                      alt="product" 
-                      style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '4px' }} 
+                    <img
+                      src={item.img || item.image}
+                      alt="product"
+                      style={{ width: '45px', height: '45px', objectFit: 'cover', borderRadius: '4px' }}
                     />
                     <div>
                       <div><strong>{item.name}</strong></div>
@@ -279,23 +279,23 @@ export default function Checkout() {
         <h2>결제 수단</h2>
         <div className="payment-method">
           <label className="radio-label">
-            <input 
-              type="radio" 
-              name="payment" 
-              value="kakao" 
-              checked={payment === 'kakao'} 
-              onChange={e => setPayment(e.target.value)} 
+            <input
+              type="radio"
+              name="payment"
+              value="kakao"
+              checked={payment === 'kakao'}
+              onChange={e => setPayment(e.target.value)}
             /> 카카오페이
           </label>
         </div>
         <div className="payment-method">
           <label className="radio-label">
-            <input 
-              type="radio" 
-              name="payment" 
-              value="naver" 
-              checked={payment === 'naver'} 
-              onChange={e => setPayment(e.target.value)} 
+            <input
+              type="radio"
+              name="payment"
+              value="naver"
+              checked={payment === 'naver'}
+              onChange={e => setPayment(e.target.value)}
             />
             <p>네이버페이</p>
           </label>
@@ -303,23 +303,23 @@ export default function Checkout() {
       </div>
 
       {/* 5. 필수 약관 동의 세션 */}
-      <div className="terms" style={{marginLeft:'30px'}}>
+      <div className="terms" style={{ marginLeft: '30px' }}>
         <input type="checkbox" id="terms" checked={terms} onChange={e => setTerms(e.target.checked)} />
         <label htmlFor="terms"> 구매조건 확인 및 결제대행 서비스 약관 동의 (필수)</label><br />
         <input type="checkbox" id="privacy" checked={privacy} onChange={e => setPrivacy(e.target.checked)} />
         <label htmlFor="privacy"> 개인정보 수집 및 이용, 국외 이전 동의 (필수)</label>
       </div>
 
-        <div className='pay-button-top'>
-          <button className="pay-button pay-button-pay" onClick={handlePayment}>결제하기</button>
-          <button className="pay-button pay-button-cancel" onClick={() => clickCancel()}>취소하기</button>
-        </div>
+      <div className='pay-button-top'>
+        <button className="pay-button pay-button-pay" onClick={handlePayment}>결제하기</button>
+        <button className="pay-button pay-button-cancel" onClick={() => clickCancel()}>취소하기</button>
+      </div>
 
       {/* 6. 카카오페이 결제 QR 모달 오픈 */}
       {showModal && (
-        <QRModal 
-          qrUrl={qrUrl} 
-          amount={FinalPrice} 
+        <QRModal
+          qrUrl={qrUrl}
+          amount={FinalPrice}
           onClose={() => setShowModal(false)}
         />
       )}

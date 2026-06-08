@@ -13,7 +13,7 @@ import { NaverButton } from "../../components/Sub/TopStyle";
 
 export default function Cart() {
   const navigate = useNavigate();
-  
+
   // Store 상태 가져오기
   const [cartList, setCartList] = useState([]);
   const [products, setProducts] = useState([]);
@@ -44,39 +44,39 @@ export default function Cart() {
       if (userData && userData && userData.mid) {
         const midValue = userData?.mid
 
-        if(midValue) {
+        if (midValue) {
           // console.log("midValue: ", midValue);
 
-          const list = await axiosPost('/carts/list', {"userData": midValue});
+          const list = await axiosPost('/carts/list', { "userData": midValue });
           console.log("cartlist: ", list);
-          
+
           setCartList(list);
           setCartListStore(list);
-          
+
           if (list && list.length > 0) {
             setTotalPrice(list[0].total_price);
           }
         } else {
           console.log("아직 mid 값이 준비되지 않았습니다. 현재 상태:", userData);
-        } 
+        }
       } else {
-      console.log("유저 정보(userData)를 아직 불러오지 못했거나 로그아웃 상태입니다.");
-      setCartList([]);
-      setTotalPrice(0);
+        console.log("유저 정보(userData)를 아직 불러오지 못했거나 로그아웃 상태입니다.");
+        setCartList([]);
+        setTotalPrice(0);
       }
     };
 
     fetchProducts();
   }, [isUpdate]);
 
-  const handleUpdateQty = async(cid, type) => {
+  const handleUpdateQty = async (cid, type) => {
     // 1. 현재 클릭한 아이템의 정보를 장바구니 리스트에서 검색.
     const currentItem = cartList.find((item) => item.cid === cid);
 
     // 2. 만약 현재 수량이 1개인데 사용자가 마이너스(-) 버튼을 눌렀다면 삭제 프로세스를 진행.
     if (currentItem && currentItem.qty === 1 && type === '-') {
       const isDeleteConfirm = window.confirm("상품을 장바구니에서 삭제하시겠습니까?");
-      
+
       if (isDeleteConfirm) {
         const result = await axiosDelete("/carts/del", { cid });
         if (result.isDelete) {
@@ -87,15 +87,15 @@ export default function Cart() {
       return; // 수량 변경 API가 호출되지 않도록 여기서 함수를 완전히 종료.
     }
 
-     // 3. 수량이 2개 이상이거나 플러스(+) 버튼을 누른 정상적인 경우는 기존 수량 변경 API를 호출.
-    const result = await axiosPut("/carts/qty", {cid, type});  //{cid:cid, ..}
-    if(result.isUpdate) {
+    // 3. 수량이 2개 이상이거나 플러스(+) 버튼을 누른 정상적인 경우는 기존 수량 변경 API를 호출.
+    const result = await axiosPut("/carts/qty", { cid, type });  //{cid:cid, ..}
+    if (result.isUpdate) {
       setIsUpdate(!isUpdate);  //장바구니 리스트 재호출
       setIsUpdateFlag();      //장바구니 카운트 재호출 -> useAuthStore -> Header
     }
   };
 
-// [체크박스] 전체 선택 / 해제
+  // [체크박스] 전체 선택 / 해제
   const handleAllCheck = () => {
     if (selectedItems.length === cartList.length) {
       setSelectedItems([]);
@@ -114,7 +114,7 @@ export default function Cart() {
   };
 
   // [삭제] 선택 항목 삭제
-  const handleDeleteSelected = async(targetCid) => {
+  const handleDeleteSelected = async (targetCid) => {
     // 1. targetCid가 배열인지 단일 문자열/숫자인지 판별하여 일관된 배열 형태로 정제.
     const cidsToDelete = Array.isArray(targetCid) ? targetCid : [targetCid];
 
@@ -135,10 +135,10 @@ export default function Cart() {
 
       // 5. 성공 후 상태 초기화 및 화면 갱신
       alert("선택한 상품이 장바구니에서 삭제되었습니다.");
-      setSelectedItems([]);      
+      setSelectedItems([]);
       setIsUpdate(!isUpdate);
       setIsUpdateFlag();
-      
+
     } catch (error) {
       console.error("선택삭제 도중 오류 발생:", error);
       alert("일부 상품을 삭제하지 못했습니다. 다시 시도해 주세요.");
@@ -161,7 +161,7 @@ export default function Cart() {
     <>
       <TopBanner />
       <Header isAboutHeader={true} />
-      
+
       <style.Cart>
         {/* 네비게이션 경로 & 타이틀 */}
         <div className="section_path">
@@ -170,11 +170,11 @@ export default function Cart() {
             <li><strong>장바구니</strong></li>
           </ol>
         </div>
-        
+
         <div className="title_area">
           <h2>장바구니</h2>
         </div>
-        
+
         <div className="step_area">
           <ol className="step">
             <li className="selected">1. 장바구니</li>
@@ -195,14 +195,14 @@ export default function Cart() {
               {/* 왼쪽: 상품 리스트 영역 */}
               <div className="cart_prod">
                 <div className="inner">
-                  <style.Title showContents={showContents} onClick={() => setShowContents(!showContents)}>
+                  <style.Title $showContents={showContents} onClick={() => setShowContents(!showContents)}>
                     <h3>장바구니 상품</h3>
                   </style.Title>
 
                   {showContents && (
                     <div className="contents">
                       <div className="sub_title">일반상품({cartList.length})</div>
-                      
+
                       {cartList.map((item, index) => (
                         <div className="order_list" key={item.cid || index}>
                           <div className="prod_box">
@@ -212,13 +212,13 @@ export default function Cart() {
                               checked={selectedItems.includes(item.cid)}
                               onChange={() => handleSingleCheck(item.cid)}
                             />
-                            
+
                             <div className="thumbnail">
                               <Link to={`/detail/${item.pid || item.id}`}>
                                 <img src={item.image || item.img} alt={item.name} />
                               </Link>
                             </div>
-                            
+
                             <div className="description">
                               <strong>
                                 <Link to={`/detail/${item.pid || item.id}`} className="name">{item.name}</Link>
@@ -235,11 +235,11 @@ export default function Cart() {
                                 <li>배송 : <span>3,500원</span> [조건] / 기본배송</li>
                               </ul>
                             </div>
-                            
+
                             <ul className="option_grp">
                               <li><span>[옵션: {item.size || item.options || item.option || "기본"}]</span></li>
                             </ul>
-                            
+
                             <div className="quantity">
                               <span className="label">수량</span>
                               <div>
@@ -251,19 +251,19 @@ export default function Cart() {
                                 <button className="modify">변경</button>
                               </div>
                             </div>
-                            
+
                             <div className="sum_price">
                               <span className="label">주문금액</span>
                               {/* 개별 아이템 총액: 가격 * 수량 */}
-                              <strong>{((parseInt(item.price?.toString().replace(/[^0-9]/g, "")) || 0) * item.qty ).toLocaleString()}</strong>원
+                              <strong>{((parseInt(item.price?.toString().replace(/[^0-9]/g, "")) || 0) * item.qty).toLocaleString()}</strong>원
                             </div>
-                            
+
                             <div className="btn_group">
                               <button>관심상품</button>
                               <button>주문하기</button>
                             </div>
                           </div>
-                          
+
                           {/* DB 연동 삭제 함수 호출 */}
                           <button className="delete_btn" onClick={() => handleDeleteSelected(item.cid)}>삭제</button>
                         </div>
@@ -273,7 +273,7 @@ export default function Cart() {
                       <div className="summary">
                         <div className="title"><h5>[기본배송]</h5></div>
                         <div className="contents">
-                          상품구매금액 <strong>{Number(totalPrice || 0)?.toLocaleString()}</strong>원 + 
+                          상품구매금액 <strong>{Number(totalPrice || 0)?.toLocaleString()}</strong>원 +
                           배송비 <strong>{calculatedShippingFee === 0 ? "0 (무료)" : `${calculatedShippingFee.toLocaleString()}원`}</strong>
                         </div>
                         <span className="total">합계 : <strong>{finalPaymentPrice.toLocaleString()}</strong>원</span>
@@ -299,7 +299,7 @@ export default function Cart() {
                       <div className="data"><strong>{Number(totalPrice || 0)?.toLocaleString()}</strong>원</div>
                     </div>
                   </div>
-                  
+
                   <div className="shipping">
                     <div className="heading">
                       <h4 className="title">총 배송비</h4>
@@ -319,7 +319,7 @@ export default function Cart() {
                     <button className="all" onClick={() => navigate('/checkout', { state: { orderList: cartList, totalPrice } })}>전체상품주문</button>
                     <button className="select" onClick={() => navigate('/checkout', { state: { orderList: cartList.filter(item => selectedItems.includes(item.cid)), totalPrice } })}>선택상품주문</button>
                   </div>
-                  
+
                   {/* 네이버 페이 버튼 */}
                   <NaverButton>
                     <div className="npay_store" style={{ width: "66%" }}>
@@ -364,7 +364,7 @@ export default function Cart() {
           </div>
         </style.Help>
       </style.Cart>
-      
+
       <Footer />
     </>
   );

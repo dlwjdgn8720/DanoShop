@@ -52,8 +52,12 @@ function Login() {
       const result = await axiosPost('/member/login', formData);
 
       if (result.isLogin) {
+        // 1. 서버가 진짜로 어떤 유저 정보를 주었는지 콘솔로 확인하기
+        console.log("서버가 보내준 유저 정보:", result.userInfo);
+        console.log("서버가 보내준 토큰:", result.accessToken);
         //로그인 인증 관리 => 전역 객체 리덕스에 등록
         login({ userData: result.userInfo, accessToken: result.accessToken });
+        localStorage.setItem('loginType', 'normal');
         alert('로그인에 성공하셨습니다.');
         navigate('/');
       } else if (!result.isComparePwd) {

@@ -18,17 +18,17 @@ function ProdDetail() {
   const [product, setProduct] = useState([]);
 
   useEffect(() => {
-      const getProductDetail = async () => {
-        setProduct(null);
-        try {
-          const response = await axiosPost('/product/detailList', { id : Number(id) });
-          setProduct(response.result[0] || []); 
-        } catch (error) {
-          console.error("데이터 가져오기 실패:", error);
-        }
-      };
-      getProductDetail();
-    }, [id]);
+    const getProductDetail = async () => {
+      setProduct(null);
+      try {
+        const response = await axiosPost('/product/detailList', { id: Number(id) });
+        setProduct(response.result[0] || []);
+      } catch (error) {
+        console.error("데이터 가져오기 실패:", error);
+      }
+    };
+    getProductDetail();
+  }, [id]);
 
   // const productId = parseInt(id || "", 10);
   // const dummy = [
@@ -69,15 +69,15 @@ function ProdDetail() {
         onTabClick={handleTabClick}
         ref={tabContentRef}
       /> */}
-      <style.ProdDetail show={!!info_name}>
+      <style.ProdDetail $show={!!info_name}>
         <div>
-          <p>
-            {product && product?.image_set?.map((item, index) => (
-              <div key={index}>
-                <img src={item} alt="" />
-              </div>
-            ))}
-          </p>
+          {/* <p> */}
+          {product && product?.image_set?.map((item, index) => (
+            <div style={{ textAlign: "center" }} key={index}>
+              <img src={item} alt="" />
+            </div>
+          ))}
+          {/* </p> */}
           <br></br>
         </div>
         <div className="detail_info">

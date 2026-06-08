@@ -40,6 +40,14 @@ function App() {
     const restoreLogin = async () => {
       if (isProcessed.current) return;
 
+      const loginType = localStorage.getItem('loginType');
+
+      // [수정] 만약 로그인했던 흔적(기록)이 아예 없다면, 서버에 요청하지 않고 바로 종료!
+      if (!loginType) {
+        logout(); // authChecked를 true로 만들어 화면을 보여주기 위함
+        return;
+      }
+
       if (localStorage.getItem('loginType') === 'kakao') {
         isProcessed.current = true;
         const res = await axios.post("http://localhost:9000/member/kakaoRefresh",
@@ -101,7 +109,7 @@ function App() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/carts/order" element={<Order />} />
         <Route path="/success" element={<Success />} />
-        <Route path="login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/oauth/callback/kakao" element={<KakaoCallback />} />
       </Routes>
