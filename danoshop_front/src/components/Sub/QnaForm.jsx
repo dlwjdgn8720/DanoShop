@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../../../css/qnaform.css'; // 작성한 일반 CSS 파일 import
 import useAuthStore from '../../../store/authStore.js';
 
-export default function QnaForm({ mode = 'write', initialData, onSave, onDelete, onCancel, onReplyClick, isAdmin, isAlreadyReplied }) {
+export default function QnaForm({ mode = 'write', initialData, onSave, onCancel, onReplyClick, isAdmin, isAlreadyReplied, submitting }) {
 
     const currentUserId = useAuthStore((s) => s.userData?.mid);
 
@@ -22,8 +22,6 @@ export default function QnaForm({ mode = 'write', initialData, onSave, onDelete,
                 isSecret: initialData.isLock || false,
             });
         } else if ((mode === 'edit' || mode === 'detail') && initialData) {
-            console.log(initialData);
-
             setFormData({
                 category: initialData.category || '기타문의',
                 title: initialData.title || '',
@@ -76,7 +74,6 @@ export default function QnaForm({ mode = 'write', initialData, onSave, onDelete,
                             onChange={handleChange}
                             disabled={isReadonlyField}
                             className="form-select"
-                            style={{ width: 'auto !important', fontSize: '13px' }}
                         >
                             <option value="기타문의">기타문의</option>
                             <option value="상품문의">상품문의</option>
@@ -128,6 +125,21 @@ export default function QnaForm({ mode = 'write', initialData, onSave, onDelete,
                     />
                 </div>
 
+                {/* 답변완료된 질문의 상세보기라면, 질문 바로 아래에 답변을 카드 형태로 붙여서 보여준다 */}
+                {mode === 'detail' && initialData?.answered && (
+                    <div className="qna-answer-card">
+                        <div className="qna-answer-header">
+                            <span className="qna-answer-shop-icon">🛍️</span>
+                            <span className="qna-answer-author">{initialData.answerAuthor || '다노샵'}</span>
+                            <span className="qna-answer-badge">답변</span>
+                            <span className="qna-answer-date">{initialData.answerDate}</span>
+                        </div>
+                        <p className="qna-answer-content">
+                            {initialData.answerContent || '비밀글 답변입니다. 작성자만 확인할 수 있습니다.'}
+                        </p>
+                    </div>
+                )}
+
                 {/* 하단 버튼 영역 */}
 
                 <div className="qna-form-footer">
@@ -135,26 +147,31 @@ export default function QnaForm({ mode = 'write', initialData, onSave, onDelete,
                         type="button"
                         onClick={onCancel}
                         className="btn-cancel"
+                        disabled={submitting}
                     >
                         {isReadonlyForm ? '목록으로' : '취소'}
                     </button>
 
-                    {/* 관리자가 상세 조회 중이고, 원글(is_reply !== 1)일 때만 답변하기 버튼 노출 */}
-                    {mode === 'detail' && isAdmin && initialData.isReply === true && !isAlreadyReplied && (
+                    {/* 관리자가 상세 조회 중이고 아직 답변이 없을 때만 답변하기 버튼 노출 */}
+                    {mode === 'detail' && isAdmin && !isAlreadyReplied && (
                         <button
                             type="button"
                             onClick={() => onReplyClick(initialData)}    // 부모에게 답글 폼 요청
-                            style={{ border: '1px solid #d1d5db', backgroundColor: 'orange', color: 'white', marginLeft: '10px', padding: '8px 20px', fontSize: '14px' }}
+                            className="btn-reply"
                         >
                             답변하기
                         </button>
                     )}
 
                     {!isReadonlyForm && (
-                        <button type="submit" className="btn-submit">
-                            {mode === 'reply' && '답변완료'}
-                            {mode === 'write' && '등록하기'}
-                            {mode === 'edit' && '수정완료'}
+                        <button type="submit" className="btn-submit" disabled={submitting}>
+                            {submitting ? '처리중...' : (
+                                <>
+                                    {mode === 'reply' && '답변완료'}
+                                    {mode === 'write' && '등록하기'}
+                                    {mode === 'edit' && '수정완료'}
+                                </>
+                            )}
                         </button>
                     )}
                 </div>

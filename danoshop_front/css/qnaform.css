@@ -179,3 +179,93 @@
 .btn-submit:hover {
     background-color: #ea580c;
 }
+
+.btn-cancel:disabled,
+.btn-submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* 관리자 답변하기 버튼 */
+.btn-reply {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background-color: #f97316;
+    color: #ffffff;
+    font-weight: 500;
+    margin-left: 10px;
+    transition: background-color 0.2s;
+}
+
+.btn-reply:hover {
+    background-color: #ea580c;
+}
+
+/* 답변완료 카드 - 질문 상세 바로 아래에 판매자 답변을 붙여서 보여준다 */
+.qna-answer-card {
+    margin-left: 24px;
+    margin-top: -4px;
+    padding: 16px 18px;
+    background-color: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-left: 4px solid #f97316;
+    border-radius: 6px;
+    position: relative;
+}
+
+.qna-answer-card::before {
+    content: "";
+    position: absolute;
+    top: -9px;
+    left: 20px;
+    width: 14px;
+    height: 14px;
+    border-left: 1px solid #fed7aa;
+    border-top: 1px solid #fed7aa;
+    background-color: #fff7ed;
+    transform: rotate(45deg);
+}
+
+.qna-answer-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.qna-answer-shop-icon {
+    font-size: 15px;
+}
+
+.qna-answer-author {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.qna-answer-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #f97316;
+    border-radius: 999px;
+}
+
+.qna-answer-date {
+    margin-left: auto;
+    font-size: 12px;
+    color: #a8a29e;
+}
+
+.qna-answer-content {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #44403c;
+    white-space: pre-wrap;
+}

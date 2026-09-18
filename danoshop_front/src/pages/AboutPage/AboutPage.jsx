@@ -59,7 +59,7 @@ function AboutPage() {
       setQnaCount(count);
     }
     getQnaCount();
-  }, [qnaCount])
+  }, [id])
 
   // 페이지 진입 시 스크롤 상단 이동
   // window.scroll({ top: 0, behavior: "auto" });

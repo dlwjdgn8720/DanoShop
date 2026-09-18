@@ -3,7 +3,7 @@ import useAuthStore from "../store/authStore.js";
 
 //(1) 쿠키를 자동으로 주고받으려면 전역 설정 필수, axios 대신 instance 객체가 쿠키포함 처리하도록 수정
 const instance = axios.create({
-  baseURL: "http://localhost:9000",
+  baseURL: import.meta.env.VITE_API_BASE_URL || "http://localhost:9000",
   withCredentials: true, // 모든 요청에 쿠키 자동 첨부
 });
 

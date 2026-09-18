@@ -10,6 +10,5 @@ router.put("/update/:groupId", controller.updateQnaInfo);
 router.delete("/delete/:id", controller.deleteQnaInfo);
 router.post("/reply", controller.replyQnaInfo);
 router.put("/updateViews/:qid", controller.updateViews);
-router.put("/checkReply/:id", controller.checkReply);
 
 export default router;
